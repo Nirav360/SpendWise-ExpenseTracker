@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   margin: 0;
   padding: 0;
@@ -81,6 +85,7 @@
   height: 100%;
   background-color: #fff;
   border-radius: 1rem; /* Rounded corners */
+  overflow: auto;
 }
 
 .transaction {
@@ -118,6 +123,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 0.25rem;
+  width: 20%;
 }
 
 .transaction-item > .transaction_number {
@@ -144,7 +150,7 @@
 }
 
 .transaction_date {
-  margin-left: auto;
+  margin: 0 auto;
 }
 
 /* Media query for smaller devices */
