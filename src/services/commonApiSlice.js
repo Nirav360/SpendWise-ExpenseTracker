@@ -61,6 +61,41 @@ export const commonApiSlice = commonApi.injectEndpoints({
         url: "getTransactions",
         method: "GET",
       }),
+      providesTags: ["Expense", "Income"],
+    }),
+
+    transactionsByMonth: builder.query({
+      query: () => ({
+        url: "transactionsByMonth",
+        method: "GET",
+      }),
+      providesTags: ["Expense", "Income"],
+    }),
+
+    expenseByCategory: builder.query({
+      query: () => ({
+        url: "expenseByCategory",
+        method: "GET",
+      }),
+      providesTags: ["Expense"],
+    }),
+
+    addIncome: builder.mutation({
+      query: (payload) => ({
+        url: "addIncome",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Income"],
+    }),
+
+    addExpense: builder.mutation({
+      query: (payload) => ({
+        url: "addExpense",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Expense"],
     }),
   }),
 });
@@ -71,4 +106,8 @@ export const {
   useLogoutMutation,
   useRefreshMutation,
   useGetTransactionsQuery,
+  useExpenseByCategoryQuery,
+  useAddIncomeMutation,
+  useAddExpenseMutation,
+  useTransactionsByMonthQuery,
 } = commonApiSlice;

@@ -28,12 +28,12 @@ const Dashboard = () => {
         severity={"error"}
       />
       <Navbar />
+      <div className="grid-container">
+        <MainContainer />
+        {isSuccess && <BalanceInfo data={data.transactionDetails} />}
+      </div>
       {isSuccess && (
         <>
-          <div className="grid-container">
-            <MainContainer />
-            <BalanceInfo data={data.transactionDetails} />
-          </div>
           <div className="transaction-container">
             <TransactionHistory data={data.transactionDetails} />
           </div>

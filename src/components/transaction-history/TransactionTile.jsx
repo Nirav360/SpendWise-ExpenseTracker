@@ -13,8 +13,12 @@ const TransactionTile = ({ transactions }) => {
       ? "transaction_income"
       : "transaction_expense";
 
-  const formattedDate = dayjs(transactions.date).format(
-    "ddd MMM DD YYYY HH:mm:ss [GMT]Z [India Standard Time]"
+  const formattedDate = useMemo(
+    () =>
+      dayjs(transactions.date).format(
+        "ddd MMM DD YYYY HH:mm:ss [GMT]Z [India Standard Time]"
+      ),
+    [transactions.date]
   );
 
   return (

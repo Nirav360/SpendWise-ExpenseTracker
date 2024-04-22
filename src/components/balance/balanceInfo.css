@@ -22,3 +22,11 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+.income > h4 {
+  color: green;
+}
+
+.expense > h4 {
+  color: red;
+}

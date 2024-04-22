@@ -1,17 +1,25 @@
 import { useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, CircularProgress } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Clear } from "@mui/icons-material";
+import { useAddIncomeMutation } from "../../services/commonApiSlice";
+import Toast from "../snackbar/Toast";
 
 const initialValues = {
   category: "",
   amount: "",
-  incomeDate: null,
+  date: null,
 };
 const IncomeForm = () => {
   const [formDetails, setFormDetails] = useState(initialValues);
+  const [addIncome, { isLoading }] = useAddIncomeMutation();
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const handleChange = (e) => {
     setFormDetails({
@@ -20,17 +28,50 @@ const IncomeForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formDetails);
-    console.log(new Date(formDetails.incomeDate));
+    const payload = {
+      ...formDetails,
+      date: new Date(formDetails.date),
+      type: "income",
+    };
+    try {
+      const response = await addIncome(payload).unwrap();
+      if (response.success) {
+        setOpenSnackbar({
+          open: true,
+          message: response.message,
+          severity: "success",
+        });
+        handleClear();
+      }
+    } catch (err) {
+      setOpenSnackbar({
+        open: true,
+        message: err?.data?.message ?? "No Server response",
+        severity: "error",
+      });
+    }
   };
 
   const handleClear = () => {
     setFormDetails(initialValues);
   };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar((prev) => ({ ...prev, open: false }));
+  };
   return (
     <>
+      <Toast
+        open={openSnackbar.open}
+        handleClose={handleCloseSnackbar}
+        message={openSnackbar.message}
+        severity={openSnackbar.severity}
+      />
       <form className="income-expense-form" onSubmit={handleSubmit}>
         <TextField
           label="Category"
@@ -55,18 +96,18 @@ const IncomeForm = () => {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Date"
-            name="incomeDate"
+            name="date"
             format="DD/MM/YYYY"
-            value={formDetails.incomeDate}
+            value={formDetails.date}
             onChange={(newValue) =>
-              setFormDetails((prev) => ({ ...prev, incomeDate: newValue }))
+              setFormDetails((prev) => ({ ...prev, date: newValue }))
             }
             slotProps={{ textField: { size: "small", required: true } }}
           />
         </LocalizationProvider>
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
-          <Button variant="contained" type="submit">
-            Submit
+          <Button variant="contained" type="submit" disabled={isLoading}>
+            {isLoading ? <CircularProgress size="1.5rem" /> : "Submit"}
           </Button>
           <Button
             variant="outlined"
