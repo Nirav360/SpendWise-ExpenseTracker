@@ -3,6 +3,9 @@ import { useTransactionsByMonthQuery } from "../../services/commonApiSlice";
 import { useEffect, useState } from "react";
 import Spinner from "../spinner/Spinner";
 import Toast from "../snackbar/Toast";
+import dayjs from "dayjs";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 // const dataset = [
 //   {
@@ -69,8 +72,10 @@ import Toast from "../snackbar/Toast";
 
 const valueFormatter = (value) => `Rs ${value}`;
 const TotalTransactionsReport = () => {
+  const [selectedYear, setSelectedYear] = useState(dayjs(new Date()));
+
   const { data, isError, isLoading, error, isSuccess } =
-    useTransactionsByMonthQuery();
+    useTransactionsByMonthQuery(selectedYear.year());
 
   const [open, setOpen] = useState(false);
 
@@ -91,33 +96,46 @@ const TotalTransactionsReport = () => {
         <div className="card-content">
           <main>
             <h3>Total Transactions</h3>
-            {isSuccess && (
-              <BarChart
-                height={300}
-                dataset={data.transactionsByMonth}
-                xAxis={[
-                  {
-                    scaleType: "band",
-                    dataKey: "month",
-                    tickPlacement: "middle",
-                  },
-                ]}
-                series={[
-                  {
-                    dataKey: "income",
-                    label: "Income",
-                    valueFormatter,
-                    color: "green",
-                  },
-                  {
-                    dataKey: "expense",
-                    label: "Expense",
-                    valueFormatter,
-                    color: "red",
-                  },
-                ]}
-              />
-            )}
+            <div className="flex flex-col">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Year"
+                  name="year"
+                  views={["year"]}
+                  disableFuture
+                  value={selectedYear}
+                  onChange={(newValue) => setSelectedYear(newValue)}
+                  slotProps={{ textField: { size: "small", required: true } }}
+                />
+              </LocalizationProvider>
+              {isSuccess && (
+                <BarChart
+                  height={300}
+                  dataset={data.transactionsByMonth}
+                  xAxis={[
+                    {
+                      scaleType: "band",
+                      dataKey: "month",
+                      tickPlacement: "middle",
+                    },
+                  ]}
+                  series={[
+                    {
+                      dataKey: "income",
+                      label: "Income",
+                      valueFormatter,
+                      color: "green",
+                    },
+                    {
+                      dataKey: "expense",
+                      label: "Expense",
+                      valueFormatter,
+                      color: "red",
+                    },
+                  ]}
+                />
+              )}
+            </div>
           </main>
         </div>
       </div>

@@ -65,17 +65,19 @@ export const commonApiSlice = commonApi.injectEndpoints({
     }),
 
     transactionsByMonth: builder.query({
-      query: () => ({
+      query: (param) => ({
         url: "transactionsByMonth",
         method: "GET",
+        params: { year: param },
       }),
       providesTags: ["Expense", "Income"],
     }),
 
     expenseByCategory: builder.query({
-      query: () => ({
+      query: (param) => ({
         url: "expenseByCategory",
         method: "GET",
+        params: { year: param },
       }),
       providesTags: ["Expense"],
     }),
