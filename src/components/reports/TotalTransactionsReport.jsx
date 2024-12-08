@@ -95,7 +95,7 @@ const TotalTransactionsReport = () => {
       <div className="card-container">
         <div className="card-content">
           <main>
-            <h3>Total Transactions</h3>
+            <h3 className="font-extrabold text-xl mb-4">Total Transactions</h3>
             <div className="flex flex-col">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker

@@ -28,7 +28,9 @@ const ExpenseReport = () => {
       />
       <div className="card-container">
         <div className="card-content">
-          <h3 className="font-extrabold mb-4">Expense by Category (in %)</h3>
+          <h3 className="font-extrabold text-xl mb-4">
+            Expense by Category (in %)
+          </h3>
           <div className="flex flex-col">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
